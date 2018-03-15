@@ -1,0 +1,14 @@
+//exec_cmd("uname -a") --> host
+//exec_cmd("tail /sys/class/thermal/thermal_zone0/temp"); --> cpu temp
+//exec_cmd("date +'%d %b %Y %T %Z'"); --> date
+//exec_cmd("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq"); --> cpu freq
+//exec_cmd("cat /proc/cpuinfo | grep 'model name' | head -n1"); --> cpu name
+//exec_cmd("df -T -l -BKB -x tmpfs -x devtmpfs -x rootfs"); --> disk
+//exec_cmd('hostname -f'); --> hostname
+//exec_cmd("cat /proc/loadavg") --> load avg
+//exec_cmd("cat /proc/uptime") --> uptime
+//exec_cmd("ifconfig wlo1 | grep 'RX bytes'| cut -d: -f2 | cut -d' ' -f1"); --> Data receive
+//exec_cmd("ifconfig wlo1 | grep 'TX bytes'| cut -d: -f2 | cut -d' ' -f1"); --> Data send
+//service --status-all --> list service available
+
+//ps -ej --> process
