@@ -1,10 +1,8 @@
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
-
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
+const info = require('./info');
 
 app.use(express.static(__dirname + '/public'));
 
@@ -21,6 +19,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('join', function () {
     console.log("Client join");
     clients.push(socket);
+    init();
   });
 
   socket.on('disconnect', function() {
@@ -33,14 +32,31 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
-async function exec_cmd(cmd) {
-  await exec(cmd).then(((state) => {
-    console.log(state.stdout);
-    return state.stdout;
-  })).catch((error) => {
-    console.log('stderr:', error);
-  });;
+function init() {
+  info.host(cmdCallback, "updateHost");
+  info.date(cmdCallback, "updateDate");
+  info.hostname(cmdCallback, "updateHostname");
+  info.uptime(cmdCallback, "updateUptime")
+  info.dataR(cmdCallback, "updateDataR", "wlo1");
+  info.dataS(cmdCallback, "updateDataS", "wlo1");
+  info.CPUName(cmdCallback, "updateCPUName");
+  info.CPUTemp(cmdCallback, "updateCPUTemp");
+  info.CPUfreq(cmdCallback, "updateCPUTfreq");
+  info.loadAvg(cmdCallback, "updateLoadAvg");
+  info.disk(cmdCallback, "updateDisk");
+  info.listServices(cmdCallback, "updateListServices");
+  info.listProcess(cmdCallback, "updateListProcess");
 }
+
+const cmdCallback = function(type, data, err) {
+  if (err) {
+      console.log(data);
+      return;
+    }
+  for (var i = 0; i < clients.length; i++) {
+    clients[i].emit(type, data);
+  }
+};
 
 server.listen(3000);
 console.log('Web Monitor running at http://localhost:3000/');
